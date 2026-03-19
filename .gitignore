@@ -28,6 +28,7 @@ build
 .svelte-kit
 build
 dist
+.vercel
 
 # Testing
 coverage
