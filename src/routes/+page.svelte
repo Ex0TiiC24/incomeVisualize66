@@ -29,6 +29,7 @@
 				<div>
 					<h1>รายได้เฉลี่ยต่อเดือนของครัวเรือนไทย</h1>
 					<p class="subtitle">สำนักงานสถิติแห่งชาติ (NSO) | ปีงบประมาณ 2566</p>
+					<p class="subtitle">600345 Taiyo</p>
 				</div>
 				<div class="header-meta">
 					<a href="https://data.go.th/dataset/os_08_00007" target="_blank" rel="noopener">
@@ -76,17 +77,16 @@
 					/>
 				</div>
 				<p class="summary-footnote">
-					ตัวเลขสรุปนี้อ้างอิงจากข้อมูลที่ทำความสะอาดแล้วทั้งหมด เพื่อให้ตรงกับการสำรวจใน
-					<samp>sai_01.py</samp>
+					ตัวเลขสรุปนี้อ้างอิงจากข้อมูลที่ทำความสะอาดแล้วทั้งหมดจาก colab
 				</p>
-				{#if data.summary.negative_income_records > 0}
+				<!-- {#if data.summary.negative_income_records > 0}
 					<div class="data-quality-note">
 						<p>
 							หมายเหตุ: พบข้อมูลรายได้ติดลบ {data.summary.negative_income_records.toLocaleString('th-TH')}
 							รายการ จึงควรอ่านค่าต่ำสุดร่วมกับค่ามัธยฐานและการกระจายตัวของข้อมูล
 						</p>
 					</div>
-				{/if}
+				{/if} -->
 			</section>
 
 			<!-- Question 1: Who earns what -->
@@ -97,7 +97,7 @@
 				</div>
 				<Q1Chart data={data.q1_occupational_income.data} />
 				<div class="section-insight">
-					<h3>💡 สรุปสำคัญ</h3>
+					<h3>สรุปประเด็นสำคัญ</h3>
 					<ul>
 						<li>
 							<strong>รายได้สูงสุด:</strong>
@@ -137,7 +137,7 @@
 				</div>
 				<Q2Chart data={data.q2_geographic_inequality.data} />
 				<div class="section-insight">
-					<h3>💡 สรุปสำคัญ</h3>
+					<h3>สรุปประเด็นสำคัญ</h3>
 					<ul>
 						<li>
 							<strong>จังหวัดที่มีความเหลื่อมล้ำมากที่สุด:</strong>
@@ -166,7 +166,7 @@
 				</div>
 				<Q3Chart data={data.q3_income_structure.data} />
 				<div class="section-insight">
-					<h3>💡 สรุปสำคัญ</h3>
+					<h3>สรุปประเด็นสำคัญ</h3>
 					<ul>
 						<li>
 							<strong>ลูกจ้าง:</strong> พึ่งพา "ค่าจ้างและเงินเดือน" เป็นหลัก (85-92%)
@@ -189,7 +189,7 @@
 
 			<!-- Policy Recommendations -->
 			<section class="recommendations-section">
-				<h2>💼 ข้อเสนอแนะการกำหนดนโยบาย</h2>
+				<h2>ข้อเสนอแนะการกำหนดนโยบาย</h2>
 				<div class="grid grid-cols-3">
 					<div class="card">
 						<h3>เพิ่มทักษะแรงงาน</h3>
@@ -222,6 +222,9 @@
 					Open Government Data of Thailand
 				</a>
 				| ปีงบประมาณ 2566
+			</p>
+			<p>
+			    Visualize Mini Hackathon Data 600345
 			</p>
 		</div>
 	</footer>

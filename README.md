@@ -20,4 +20,4 @@ Breaks down income sources by occupation group to show how heavily different hou
 - The national median is about 22,364 THB per month, which is lower than the mean and suggests a right-skewed income distribution.
 - The highest-income occupational group is `ผู้จัดการนักวิชาการและผู้ปฏิบัติงานวิชาชีพ`.
 - The lowest-income occupational group is `คนงานเกษตรป่าไม้และประมง`.
-- Provincial inequality is strongest in provinces such as Narathiwat when measured by CV and P90-P10 gap.
+- Provincial inequality is strongest in provinces such as Chonburi when measured by CV and P90-P10 gap.

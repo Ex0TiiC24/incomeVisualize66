@@ -4,8 +4,11 @@
 	let sortBy = 'cv';
 	let filteredData = [];
 	let topInequalityData = [];
+	let visibleTableRows = [];
 	let maxIncome = 0;
 	let maxCV = 0;
+	let showAllRows = false;
+	let previousSortBy = sortBy;
 
 	const sortOptions = [
 		{ value: 'cv', label: 'ความเหลื่อมล้ำ (CV)' },
@@ -16,8 +19,13 @@
 
 	$: filteredData = sortRows(data, sortBy);
 	$: topInequalityData = sortRows(data, 'cv').slice(0, 15);
+	$: visibleTableRows = showAllRows ? filteredData : filteredData.slice(0, 10);
 	$: maxIncome = filteredData.length > 0 ? Math.max(...filteredData.map((d) => d.avg_income)) : 0;
 	$: maxCV = filteredData.length > 0 ? Math.max(...filteredData.map((d) => d.cv)) : 0;
+	$: if (sortBy !== previousSortBy) {
+		previousSortBy = sortBy;
+		showAllRows = false;
+	}
 
 	function sortRows(rows, field) {
 		if (!rows || rows.length === 0) return [];
@@ -101,6 +109,21 @@
 
 	<!-- Detailed Table -->
 	<div class="table-wrapper">
+		<div class="table-header">
+			<div>
+				<h3>รายละเอียดจังหวัด</h3>
+				<p>แสดง 10 จังหวัดแรกก่อน และสามารถขยายเพื่อดูจังหวัดที่เหลือได้</p>
+			</div>
+			{#if filteredData.length > 10}
+				<button
+					type="button"
+					class="toggle-button"
+					on:click={() => (showAllRows = !showAllRows)}
+				>
+					{showAllRows ? 'ซ่อนจังหวัดที่เหลือ' : `แสดงจังหวัดที่เหลืออีก ${filteredData.length - 10} จังหวัด`}
+				</button>
+			{/if}
+		</div>
 		<table>
 			<thead>
 				<tr>
@@ -115,7 +138,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each filteredData as item, idx}
+				{#each visibleTableRows as item, idx}
 					<tr class:alert={item.cv > 0.4}>
 						<td><strong>{item.province}</strong></td>
 						<td class="text-right">{formatNumber(Math.round(item.avg_income))}</td>
@@ -139,6 +162,19 @@
 						</td>
 					</tr>
 				{/each}
+				{#if !showAllRows && filteredData.length > 10}
+					<tr class="expand-row">
+						<td colspan="8">
+							<button
+								type="button"
+								class="expand-button"
+								on:click={() => (showAllRows = true)}
+							>
+								ดูจังหวัดที่เหลืออีก {filteredData.length - 10} จังหวัด
+							</button>
+						</td>
+					</tr>
+				{/if}
 			</tbody>
 		</table>
 	</div>
@@ -309,6 +345,46 @@
 		overflow-x: auto;
 	}
 
+	.table-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: var(--spacing-md);
+		padding: var(--spacing-lg);
+		background: var(--color-white);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.table-header h3 {
+		margin-bottom: var(--spacing-xs);
+		font-size: 1rem;
+	}
+
+	.table-header p {
+		margin: 0;
+		color: var(--color-text-light);
+		font-size: 0.85rem;
+	}
+
+	.toggle-button,
+	.expand-button {
+		border: 1px solid var(--color-primary);
+		background: rgba(52, 152, 219, 0.08);
+		color: var(--color-primary);
+		border-radius: 999px;
+		padding: 0.55rem 0.9rem;
+		font: inherit;
+		font-weight: 600;
+		cursor: pointer;
+		transition: var(--transition);
+		white-space: nowrap;
+	}
+
+	.toggle-button:hover,
+	.expand-button:hover {
+		background: rgba(52, 152, 219, 0.16);
+	}
+
 	table {
 		width: 100%;
 		border-collapse: collapse;
@@ -351,6 +427,15 @@
 
 	tbody tr.alert {
 		background-color: rgba(231, 76, 60, 0.05);
+	}
+
+	tbody tr.expand-row {
+		background: var(--color-bg);
+	}
+
+	tbody tr.expand-row td {
+		padding: var(--spacing-md);
+		text-align: center;
 	}
 
 	.text-right {
