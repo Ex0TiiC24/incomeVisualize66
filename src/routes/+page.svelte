@@ -78,7 +78,7 @@
 					/>
 				</div>
 				<p class="summary-footnote">
-					ตัวเลขสรุปนี้อ้างอิงจากข้อมูลที่ทำความสะอาดแล้วทั้งหมด
+					ตัวเลขสรุปนี้อ้างอิงจากข้อมูลที่ทำความสะอาดแล้วทั้งหมดจาก colab โดย export ผลลัพธ์มาใช้ในรูปแบบ json
 				</p>
 			</section>
 
@@ -243,30 +243,7 @@
 				</div>
 			</section>
 
-			<!-- Policy Recommendations -->
-			<section class="recommendations-section">
-				<h2>ข้อเสนอแนะการกำหนดนโยบาย</h2>
-				<div class="grid grid-cols-3">
-					<div class="card">
-						<h3>เพิ่มทักษะแรงงาน</h3>
-						<p>
-							โปรแกรมฝึกอบรมสำหรับกลุ่มลูกจ้างระดับต่ำ เพื่อยกระดับให้เป็นผู้จัดการและนักวิชาการ
-						</p>
-					</div>
-					<div class="card">
-						<h3>สนับสนุนเกษตรกร</h3>
-						<p>
-							นโยบายเกษตรยั่งยืนและการประกันราคา เพื่อลดความเสี่ยงและเพิ่มรายได้อย่างต่อเนื่อง
-						</p>
-					</div>
-					<div class="card">
-						<h3>พัฒนาเศรษฐกิจท้องถิ่น</h3>
-						<p>
-							สนับสนุนเอสเอ็มอีและผู้ประกอบการขนาดเล็ก เพื่อลดความเหลื่อมล้ำทางภูมิศาสตร์
-						</p>
-					</div>
-				</div>
-			</section>
+
 		{/if}
 	</main>
 
@@ -477,32 +454,6 @@
 		font-weight: 600;
 	}
 
-	.recommendations-section {
-		background: var(--color-white);
-		padding: var(--spacing-2xl);
-		border-radius: 0.5rem;
-		border: 1px solid var(--color-border);
-		margin-bottom: var(--spacing-2xl);
-	}
-
-	.recommendations-section h2 {
-		margin-bottom: var(--spacing-xl);
-	}
-
-	.recommendations-section .card {
-		padding: var(--spacing-lg);
-	}
-
-	.recommendations-section .card h3 {
-		color: var(--color-primary);
-		margin-bottom: var(--spacing-md);
-	}
-
-	.recommendations-section .card p {
-		margin-bottom: 0;
-		font-size: 0.95rem;
-	}
-
 	.footer {
 		background: var(--color-white);
 		border-top: 1px solid var(--color-border);
@@ -552,8 +503,6 @@
 			padding: var(--spacing-lg);
 		}
 
-		.recommendations-section {
-			padding: var(--spacing-lg);
-		}
+
 	}
 </style>
