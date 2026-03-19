@@ -18,6 +18,25 @@
     "negative_income_records": 36,
     "zero_income_records": 835
   },
+  "cleaning_summary": {
+    "title": "สรุปการทำความสะอาดข้อมูล",
+    "description": "ขั้นตอนสำคัญก่อนวิเคราะห์ข้อมูลและสร้างแดชบอร์ด",
+    "takeaway": "ชุดข้อมูลมีความครบถ้วนสูง โดยไม่พบข้อมูลซ้ำหรือแถวสำคัญที่ขาดหาย และยังคงบันทึกค่าติดลบ/ค่าเป็นศูนย์ไว้เพื่อความโปร่งใส",
+    "metrics": {
+      "raw_records": 7700,
+      "clean_records": 7700,
+      "duplicate_rows_removed": 0,
+      "missing_required_rows_removed": 0,
+      "negative_income_records": 36,
+      "zero_income_records": 835
+    },
+    "steps": [
+      "ตัดช่องว่างเกินในชื่อคอลัมน์และข้อมูลประเภทข้อความ",
+      "แปลง year เป็นชนิด Int64 และ value เป็นตัวเลข",
+      "ลบข้อมูลซ้ำและตรวจ missing หลังการทำความสะอาด",
+      "สร้าง zero_flag เพื่อระบุค่าที่เป็น 0 จากหมายเหตุ attribute"
+    ]
+  },
   "summary": {
     "total_records": 7700,
     "total_provinces": 77,

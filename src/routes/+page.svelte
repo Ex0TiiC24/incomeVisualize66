@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import Q1Chart from '$lib/components/Q1Chart.svelte';
+	import Q2Map from '$lib/components/Q2Map.svelte';
 	import Q2Chart from '$lib/components/Q2Chart.svelte';
 	import Q3Chart from '$lib/components/Q3Chart.svelte';
 	import StatCard from '$lib/components/StatCard.svelte';
@@ -77,16 +78,60 @@
 					/>
 				</div>
 				<p class="summary-footnote">
-					ตัวเลขสรุปนี้อ้างอิงจากข้อมูลที่ทำความสะอาดแล้วทั้งหมดจาก colab
+					ตัวเลขสรุปนี้อ้างอิงจากข้อมูลที่ทำความสะอาดแล้วทั้งหมดตามขั้นตอนใน sai_01.py
 				</p>
-				<!-- {#if data.summary.negative_income_records > 0}
-					<div class="data-quality-note">
-						<p>
-							หมายเหตุ: พบข้อมูลรายได้ติดลบ {data.summary.negative_income_records.toLocaleString('th-TH')}
-							รายการ จึงควรอ่านค่าต่ำสุดร่วมกับค่ามัธยฐานและการกระจายตัวของข้อมูล
-						</p>
+			</section>
+
+			<!-- Data Cleaning Summary -->
+			<section class="cleaning-section">
+				<div class="section-header">
+					<h2>Data cleaning</h2>
+					<p class="section-subtitle">การทำความสะอาดข้อมูลก่อนนำมาวิเคราะห์</p>
+				</div>
+
+				<div class="grid grid-cols-4">
+					<StatCard label="ข้อมูลดิบ" value={data.cleaning_summary.metrics.raw_records} unit="รายการ" />
+					<StatCard
+						label="ข้อมูลหลังทำความสะอาด"
+						value={data.cleaning_summary.metrics.clean_records}
+						unit="รายการ"
+						highlight={true}
+					/>
+					<StatCard
+						label="ข้อมูลซ้ำที่ลบออก"
+						value={data.cleaning_summary.metrics.duplicate_rows_removed}
+						unit="รายการ"
+					/>
+					<StatCard
+						label="แถวสำคัญที่ขาดหาย"
+						value={data.cleaning_summary.metrics.missing_required_rows_removed}
+						unit="รายการ"
+					/>
+				</div>
+
+				<div class="cleaning-highlights">
+					<div class="cleaning-highlight">
+						<span class="cleaning-label">ข้อมูลรายได้ติดลบ</span>
+						<strong>{data.cleaning_summary.metrics.negative_income_records.toLocaleString('th-TH')}</strong>
+						<span class="cleaning-unit">รายการ</span>
 					</div>
-				{/if} -->
+					<div class="cleaning-highlight">
+						<span class="cleaning-label">ข้อมูลที่มีค่าเป็นศูนย์</span>
+						<strong>{data.cleaning_summary.metrics.zero_income_records.toLocaleString('th-TH')}</strong>
+						<span class="cleaning-unit">รายการ</span>
+					</div>
+				</div>
+
+				<p class="cleaning-takeaway">{data.cleaning_summary.takeaway}</p>
+
+				<div class="cleaning-steps">
+					<h3>ขั้นตอนหลักที่ใช้</h3>
+					<ul>
+						{#each data.cleaning_summary.steps as step}
+							<li>{step}</li>
+						{/each}
+					</ul>
+				</div>
 			</section>
 
 			<!-- Question 1: Who earns what -->
@@ -133,8 +178,19 @@
 			<section class="question-section">
 				<div class="section-header">
 					<h2>{data.q2_geographic_inequality.title}</h2>
-					<p class="section-subtitle">{data.q2_geographic_inequality.description}</p>
+					<p class="section-subtitle">
+						{data.q2_geographic_inequality.description} พร้อมมุมมองแผนที่เพื่อเห็นรูปแบบเชิงพื้นที่
+					</p>
 				</div>
+				<div class="q2-explainer">
+					<strong>ทำไมใช้ CV:</strong>
+					<span>
+						CV = ส่วนเบี่ยงเบนมาตรฐาน ÷ ค่าเฉลี่ย จึงเหมาะสำหรับเปรียบเทียบจังหวัดที่มีระดับรายได้
+						ต่างกัน เพราะวัดความกระจายตัวในรูปสัดส่วน ทำให้เห็นความเหลื่อมล้ำภายในจังหวัดได้อย่าง
+						ยุติธรรมกว่าเมื่อเทียบกับการดูตัวเลขดิบเพียงอย่างเดียว
+					</span>
+				</div>
+				<Q2Map data={data.q2_geographic_inequality.data} />
 				<Q2Chart data={data.q2_geographic_inequality.data} />
 				<div class="section-insight">
 					<h3>สรุปประเด็นสำคัญ</h3>
@@ -296,17 +352,66 @@
 		font-size: 0.875rem;
 	}
 
-	.data-quality-note {
-		margin-top: var(--spacing-lg);
-		padding: var(--spacing-md);
-		border-left: 4px solid var(--color-warning);
-		background-color: rgba(243, 156, 18, 0.08);
-		border-radius: 0.375rem;
+	.cleaning-section {
+		margin-bottom: var(--spacing-2xl);
+		background: var(--color-white);
+		padding: var(--spacing-2xl);
+		border-radius: 0.5rem;
+		border: 1px solid var(--color-border);
 	}
 
-	.data-quality-note p {
+	.cleaning-highlights {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--spacing-md);
+		margin-top: var(--spacing-lg);
+	}
+
+	.cleaning-highlight {
+		display: flex;
+		align-items: baseline;
+		gap: var(--spacing-sm);
+		padding: var(--spacing-md);
+		border-radius: 0.375rem;
+		background-color: rgba(52, 152, 219, 0.04);
+		border: 1px solid var(--color-border);
+	}
+
+	.cleaning-label {
+		font-size: 0.9rem;
+		color: var(--color-text-light);
+	}
+
+	.cleaning-unit {
+		font-size: 0.85rem;
+		color: var(--color-text-light);
+	}
+
+	.cleaning-takeaway {
+		margin-top: var(--spacing-lg);
 		margin-bottom: 0;
 		color: var(--color-text);
+	}
+
+	.cleaning-steps {
+		padding: var(--spacing-md);
+		margin-top: var(--spacing-lg);
+	}
+
+	.cleaning-steps h3 {
+		margin-bottom: var(--spacing-sm);
+		font-size: 1rem;
+	}
+
+	.cleaning-steps ul {
+		margin: 0;
+		padding-left: 1.25rem;
+		color: var(--color-text);
+	}
+
+	.cleaning-steps li {
+		margin-bottom: var(--spacing-sm);
+		line-height: 1.7;
 	}
 
 	.question-section {
@@ -328,6 +433,21 @@
 	.section-subtitle {
 		color: var(--color-text-light);
 		font-size: 1rem;
+	}
+
+	.q2-explainer {
+		margin-bottom: var(--spacing-lg);
+		padding: var(--spacing-md) var(--spacing-lg);
+		background: rgba(52, 152, 219, 0.06);
+		border-left: 4px solid var(--color-primary);
+		border-radius: 0.375rem;
+		color: var(--color-text);
+		line-height: 1.7;
+	}
+
+	.q2-explainer strong {
+		display: inline-block;
+		margin-right: var(--spacing-xs);
 	}
 
 	.section-insight {
