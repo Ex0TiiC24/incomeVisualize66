@@ -54,27 +54,31 @@
 				<h2>สรุปข้อมูลทั่วไป</h2>
 				<div class="grid grid-cols-4">
 					<StatCard
+						label="จำนวนรายการข้อมูล"
+						value={data.summary.total_records}
+						unit="รายการ"
+					/>
+					<StatCard
 						label="จำนวนจังหวัด"
 						value={data.summary.total_provinces}
 						unit="จังหวัด"
 					/>
 					<StatCard
-						label="กลุ่มอาชีพ"
-						value={data.summary.occupation_groups}
-						unit="กลุ่ม"
-					/>
-					<StatCard
-						label="รายได้เฉลี่ยทั้งประเทศ"
+						label="รายได้เฉลี่ยของข้อมูลทั้งหมด"
 						value={Math.round(data.summary.avg_income_all).toLocaleString('th-TH')}
 						unit="บาท/เดือน"
 						highlight={true}
 					/>
 					<StatCard
-						label="รายได้มัธยฐานทั้งประเทศ"
+						label="รายได้มัธยฐานของข้อมูลทั้งหมด"
 						value={Math.round(data.summary.median_income_all).toLocaleString('th-TH')}
 						unit="บาท/เดือน"
 					/>
 				</div>
+				<p class="summary-footnote">
+					ตัวเลขสรุปนี้อ้างอิงจากข้อมูลที่ทำความสะอาดแล้วทั้งหมด เพื่อให้ตรงกับการสำรวจใน
+					<samp>sai_01.py</samp>
+				</p>
 				{#if data.summary.negative_income_records > 0}
 					<div class="data-quality-note">
 						<p>
@@ -281,6 +285,12 @@
 
 	.summary-section h2 {
 		margin-bottom: var(--spacing-lg);
+	}
+
+	.summary-footnote {
+		margin-top: var(--spacing-md);
+		color: var(--color-text-light);
+		font-size: 0.875rem;
 	}
 
 	.data-quality-note {
