@@ -1,35 +1,31 @@
 <script>
-	import { onMount } from 'svelte';
-
 	export let data = [];
 
-	let chartContainer;
 	let maxIncome = 0;
 
-	onMount(() => {
-		if (data && data.length > 0) {
-			maxIncome = Math.max(...data.map(d => d.avg_income));
-		}
-	});
-
-	$: maxIncome = data && data.length > 0 ? Math.max(...data.map(d => d.avg_income)) : 0;
+	$: maxIncome = data && data.length > 0 ? Math.max(...data.map((d) => d.avg_income)) : 0;
 </script>
 
 <div class="q1-container">
-	<div class="chart-wrapper" bind:this={chartContainer}>
+	<div class="chart-wrapper">
 		<div class="bars-container">
 			{#each data as item, idx (idx)}
 				<div class="bar-item">
 					<div class="bar-label">
 						<span class="occupation-name">{item.soc_eco_class2}</span>
-						<span class="occupation-type" class:employer={item.soc_eco_class1 === 'ลูกจ้าง'} class:business={item.soc_eco_class1 === 'เจ้าของกิจการ'} class:farmer={item.soc_eco_class1 === 'เกษตรกร'}>
+						<span
+							class="occupation-type"
+							class:employer={item.soc_eco_class1 === 'ลูกจ้าง'}
+							class:business={item.soc_eco_class1 === 'ผู้ประกอบธุรกิจของตนเองที่ไม่ใช่การเกษตร'}
+							class:farmer={item.soc_eco_class1 === 'ผู้ถือครองทำการเกษตร/เพาะเลี้ยง'}
+						>
 							{item.soc_eco_class1}
 						</span>
 					</div>
 					<div class="bar-wrapper">
 						<div 
 							class="bar" 
-							style="width: {(item.avg_income / maxIncome) * 100}%"
+							style="width: {maxIncome > 0 ? (item.avg_income / maxIncome) * 100 : 0}%"
 						>
 							<span class="bar-value">
 								{item.avg_income.toLocaleString('th-TH')}

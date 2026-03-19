@@ -1,31 +1,33 @@
 <script>
-	import { onMount } from 'svelte';
-
 	export let data = [];
 
 	let occupations = [];
-	let selectedOccupation = null;
+	let selectedOccupation = '';
 	let filteredData = [];
+	let sortedFilteredData = [];
+	let occupationType = '';
+	let mainSource = null;
+	let supportingSources = [];
 
-	onMount(() => {
+	$: {
 		if (data && data.length > 0) {
-			// Get unique occupations
-			const uniqueOccupations = [...new Set(data.map(d => d.soc_eco_class2))];
-			occupations = uniqueOccupations;
-			selectedOccupation = uniqueOccupations[0];
-			updateFiltered();
+			const uniqueOccupations = [...new Set(data.map((d) => d.soc_eco_class2))];
+			if (uniqueOccupations.join('|') !== occupations.join('|')) {
+				occupations = uniqueOccupations;
+			}
+			if (!selectedOccupation || !occupations.includes(selectedOccupation)) {
+				selectedOccupation = uniqueOccupations[0];
+			}
 		}
-	});
-
-	$: selectedOccupation, updateFiltered();
-
-	function updateFiltered() {
-		if (!selectedOccupation) return;
-		filteredData = data.filter(d => d.soc_eco_class2 === selectedOccupation);
 	}
 
-	$: mainSource = filteredData.length > 0 ? [...filteredData].sort((a, b) => b.percentage - a.percentage)[0] : null;
-	$: supportingSources = mainSource ? filteredData.filter(d => d.percentage > 5 && d.percentage < mainSource.percentage) : [];
+	$: filteredData = selectedOccupation ? data.filter((d) => d.soc_eco_class2 === selectedOccupation) : [];
+	$: sortedFilteredData = [...filteredData].sort((a, b) => b.percentage - a.percentage);
+	$: occupationType = getOccupationType(selectedOccupation);
+	$: mainSource = sortedFilteredData.length > 0 ? sortedFilteredData[0] : null;
+	$: supportingSources = mainSource
+		? sortedFilteredData.filter((d) => d.percentage > 5 && d.percentage < mainSource.percentage)
+		: [];
 
 	function formatNumber(n) {
 		return n.toLocaleString('th-TH');
@@ -45,12 +47,12 @@
 	}
 
 	function getOccupationType(occ) {
-		const first = data.find(d => d.soc_eco_class2 === occ);
+		const first = data.find((d) => d.soc_eco_class2 === occ);
 		return first?.soc_eco_class1 || '';
 	}
 
 	function getTotalIncome(occ) {
-		const filtered = data.filter(d => d.soc_eco_class2 === occ);
+		const filtered = data.filter((d) => d.soc_eco_class2 === occ);
 		if (filtered.length === 0) return 0;
 		return filtered[0].total_income;
 	}
@@ -64,8 +66,13 @@
 				<option value={occ}>{occ}</option>
 			{/each}
 		</select>
-		<span class="occupation-type" class:employer={getOccupationType(selectedOccupation) === 'ลูกจ้าง'} class:business={getOccupationType(selectedOccupation) === 'เจ้าของกิจการ'} class:farmer={getOccupationType(selectedOccupation) === 'เกษตรกร'}>
-			{getOccupationType(selectedOccupation)}
+		<span
+			class="occupation-type"
+			class:employer={occupationType === 'ลูกจ้าง'}
+			class:business={occupationType === 'ผู้ประกอบธุรกิจของตนเองที่ไม่ใช่การเกษตร'}
+			class:farmer={occupationType === 'ผู้ถือครองทำการเกษตร/เพาะเลี้ยง'}
+		>
+			{occupationType}
 		</span>
 	</div>
 
@@ -82,11 +89,11 @@
 							<div 
 								class="pie-segment" 
 								style="
-									--start-angle: {startAngle}deg;
+									--start-angle: {startAngle * 3.6}deg;
 									--angle: {angle}deg;
 									--color: {getColorBySource(item.source_income3)};
 									background: conic-gradient(
-										from {startAngle}deg,
+										from {startAngle * 3.6}deg,
 										{getColorBySource(item.source_income3)} {angle}%,
 										transparent {angle}%
 									);
@@ -166,7 +173,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each filteredData.sort((a, b) => b.percentage - a.percentage) as item}
+					{#each sortedFilteredData as item}
 						<tr class:primary={item.percentage > 50} class:secondary={item.percentage > 20} class:tertiary={item.percentage <= 20}>
 							<td>
 								<div class="source-label">

@@ -1,34 +1,40 @@
-# Thai Household Income Dashboard - Data Cleaning / Data visualization project
-## Overview
+# Thai Household Income Dashboard
 
-This is a complete **SvelteKit-based web visualization dashboard** designed to analyze Thai household income data from the National Statistical Office (NSO). The dashboard answers 3 critical policy questions through interactive data visualizations.
+## Project summary
 
-**Data Source:** https://data.go.th/dataset/os_08_00007  
-**Year:** 2566 (2023)  
-**Framework:** SvelteKit + Vite  
-**Design:** Clean white aesthetic with responsive layout
+This project is a SvelteKit dashboard that visualizes Thailand’s average household income dataset from the National Statistical Office (NSO), published via Open Government Data of Thailand.
 
----
+The dataset contains 7,700 records across 77 provinces and 10 occupation groups for year 2566 (2023). The project turns the raw CSV into a dashboard-friendly JSON file and presents the results through three policy questions:
 
-## Three Core Questions Answered
+### Q1: Who earns what?
+Compares average monthly household income by occupational group and shows the gap between the highest- and lowest-earning groups.
 
-### Q1: Who earns what? (ใครได้รับค่าตอบแทนแค่ไหน?)
-- **Purpose:** Identify income gaps between occupational groups
-- **Visualization:** Horizontal bar chart + detailed table
-- **Key Insight:** Shows wage disparity from executives (48,293 THB) to agricultural workers (14,983 THB)
-- **Use Case:** Policy makers can identify skill gaps requiring training programs
+### Q2: Where is inequality?
+Explores geographic income inequality using average income, median income, P10/P90 spread, and coefficient of variation by province.
 
-### Q2: Where is inequality? (ความเหลื่อมล้ำอยู่ที่ไหน?)
-- **Purpose:** Identify geographic income disparities
-- **Visualization:** Scatter plot (income vs inequality) + top 15 bar chart + detailed table
-- **Key Metric:** Coefficient of Variation (CV) and P90-P10 gap
-- **Use Case:** Target local economic development efforts to provinces with highest inequality
+### Q3: What is the income structure?
+Breaks down income sources by occupation group to show how heavily different households depend on wages, business income, agriculture, transfers, or property income.
 
-### Q3: What is the income structure? (รายได้มาจากไหน และใครพึ่งพาอะไร?)
-- **Purpose:** Understand income source composition and economic vulnerability
-- **Visualization:** Donut chart + stacked bar + breakdown table + risk analysis
-- **Key Insight:** Shows employees rely 85-92% on salary, farmers only 74% on agriculture income
-- **Use Case:** Design targeted support programs based on income dependencies
+## Current key findings
 
----
+- The national average household income is about 25,327 THB per month.
+- The national median is about 22,364 THB per month, which is lower than the mean and suggests a right-skewed income distribution.
+- The highest-income occupational group is `ผู้จัดการนักวิชาการและผู้ปฏิบัติงานวิชาชีพ`.
+- The lowest-income occupational group is `คนงานเกษตรป่าไม้และประมง`.
+- Provincial inequality is strongest in provinces such as Narathiwat when measured by CV and P90-P10 gap.
 
+## Suggested improvements
+
+1. Keep both mean and median in the summary to reduce the risk of over-interpreting outliers.
+2. Flag negative or zero income records in the UI so readers know the dataset contains edge cases.
+3. Let the inequality chart stay sorted by inequality even when the table sort changes.
+4. Add more explicit labels or tooltips for chart encodings to make the visuals easier to read on mobile.
+5. Consider adding province or occupation filters for deeper exploration.
+6. If the dashboard is used for policy discussion, add a short methodology note explaining how each metric is calculated.
+
+## Data notes
+
+- Source: NSO via Open Government Data of Thailand
+- Unit: THB per month
+- Time period: 2566
+- The processing script keeps the published values intact and only cleans formatting, types, and duplicates.

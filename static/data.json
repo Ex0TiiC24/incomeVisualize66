@@ -2,7 +2,19 @@
   "metadata": {
     "title": "รายได้เฉลี่ยต่อเดือนของครัวเรือนในประเทศไทย",
     "year": 2566,
-    "source": "สำนักงานสถิติแห่งชาติ (National Statistical Office: NSO)"
+    "source": "สำนักงานสถิติแห่งชาติ (National Statistical Office: NSO)",
+    "notes": [
+      "The dataset is published by the NSO through Open Government Data of Thailand.",
+      "Negative income values are preserved and flagged in data_quality for review."
+    ]
+  },
+  "data_quality": {
+    "raw_records": 7700,
+    "clean_records": 7700,
+    "duplicate_rows_removed": 0,
+    "missing_required_rows_removed": 0,
+    "negative_income_records": 36,
+    "zero_income_records": 835
   },
   "summary": {
     "total_records": 7700,
@@ -12,7 +24,8 @@
     "median_income_all": 22363.5,
     "min_income": -600.0,
     "max_income": 181322.0,
-    "std_income": 14594.869134567349
+    "std_income": 14594.869134567349,
+    "negative_income_records": 36
   },
   "q1_occupational_income": {
     "title": "ใครได้รับค่าตอบแทนแค่ไหน",

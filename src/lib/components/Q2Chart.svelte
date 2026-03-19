@@ -1,10 +1,11 @@
 <script>
-	import { onMount } from 'svelte';
-
 	export let data = [];
 
 	let sortBy = 'cv';
 	let filteredData = [];
+	let topInequalityData = [];
+	let maxIncome = 0;
+	let maxCV = 0;
 
 	const sortOptions = [
 		{ value: 'cv', label: 'ความเหลื่อมล้ำ (CV)' },
@@ -13,18 +14,16 @@
 		{ value: 'avg_income', label: 'รายได้เฉลี่ย' }
 	];
 
-	onMount(() => {
-		updateFiltered();
-	});
+	$: filteredData = sortRows(data, sortBy);
+	$: topInequalityData = sortRows(data, 'cv').slice(0, 15);
+	$: maxIncome = filteredData.length > 0 ? Math.max(...filteredData.map((d) => d.avg_income)) : 0;
+	$: maxCV = filteredData.length > 0 ? Math.max(...filteredData.map((d) => d.cv)) : 0;
 
-	$: sortBy, updateFiltered();
-
-	function updateFiltered() {
-		if (!data) return;
-		const sorted = [...data].sort((a, b) => {
-			return b[sortBy] - a[sortBy];
+	function sortRows(rows, field) {
+		if (!rows || rows.length === 0) return [];
+		return [...rows].sort((a, b) => {
+			return (b[field] ?? 0) - (a[field] ?? 0);
 		});
-		filteredData = sorted;
 	}
 
 	function formatNumber(n) {
@@ -64,7 +63,7 @@
 					<div 
 						class="scatter-point" 
 						title="{item.province}: รายได้ {formatNumber(item.avg_income)} บาท, CV {item.cv.toFixed(2)}"
-						style="left: {(item.avg_income / Math.max(...filteredData.map(d => d.avg_income))) * 90 + 5}%; bottom: {(item.cv / Math.max(...filteredData.map(d => d.cv))) * 90 + 5}%"
+						style="left: {maxIncome > 0 ? (item.avg_income / maxIncome) * 90 + 5 : 5}%; bottom: {maxCV > 0 ? (item.cv / maxCV) * 90 + 5 : 5}%"
 					>
 						<div class="tooltip">{item.province}</div>
 					</div>
@@ -80,7 +79,7 @@
 		<div class="chart-card">
 			<h3>15 จังหวัดที่มีความเหลื่อมล้ำมากที่สุด</h3>
 			<div class="bars-container">
-				{#each filteredData.slice(0, 15) as item, idx}
+				{#each topInequalityData as item, idx}
 					<div class="bar-row">
 						<div class="bar-label">
 							<span class="rank">{idx + 1}</span>
@@ -89,7 +88,7 @@
 						<div class="bar-wrapper">
 							<div 
 								class="bar" 
-								style="width: {(item.cv / Math.max(...filteredData.map(d => d.cv))) * 100}%; background-color: {getCVColor(item.cv)}"
+								style="width: {maxCV > 0 ? (item.cv / maxCV) * 100 : 0}%; background-color: {getCVColor(item.cv)}"
 							>
 								<span class="bar-value">{item.cv.toFixed(2)}</span>
 							</div>

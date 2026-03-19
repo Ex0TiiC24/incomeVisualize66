@@ -52,7 +52,7 @@
 			<!-- Summary Stats -->
 			<section class="summary-section">
 				<h2>สรุปข้อมูลทั่วไป</h2>
-				<div class="grid grid-cols-3">
+				<div class="grid grid-cols-4">
 					<StatCard
 						label="จำนวนจังหวัด"
 						value={data.summary.total_provinces}
@@ -69,7 +69,20 @@
 						unit="บาท/เดือน"
 						highlight={true}
 					/>
+					<StatCard
+						label="รายได้มัธยฐานทั้งประเทศ"
+						value={Math.round(data.summary.median_income_all).toLocaleString('th-TH')}
+						unit="บาท/เดือน"
+					/>
 				</div>
+				{#if data.summary.negative_income_records > 0}
+					<div class="data-quality-note">
+						<p>
+							หมายเหตุ: พบข้อมูลรายได้ติดลบ {data.summary.negative_income_records.toLocaleString('th-TH')}
+							รายการ จึงควรอ่านค่าต่ำสุดร่วมกับค่ามัธยฐานและการกระจายตัวของข้อมูล
+						</p>
+					</div>
+				{/if}
 			</section>
 
 			<!-- Question 1: Who earns what -->
@@ -268,6 +281,19 @@
 
 	.summary-section h2 {
 		margin-bottom: var(--spacing-lg);
+	}
+
+	.data-quality-note {
+		margin-top: var(--spacing-lg);
+		padding: var(--spacing-md);
+		border-left: 4px solid var(--color-warning);
+		background-color: rgba(243, 156, 18, 0.08);
+		border-radius: 0.375rem;
+	}
+
+	.data-quality-note p {
+		margin-bottom: 0;
+		color: var(--color-text);
 	}
 
 	.question-section {
